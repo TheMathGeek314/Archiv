@@ -12,6 +12,7 @@ namespace Archiv {
         public override string GetVersion() => "1.0.0.0";
 
         static GameObject objectTemplate;
+        GameObject boundsRef;
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects) {
             objectTemplate = preloadedObjects["Town"]["grimm_tents/main_tent/Grimm_town_signs_0001_1"];
@@ -27,7 +28,7 @@ namespace Archiv {
             if(self.gameObject.scene.name == "Fungus3_archive" && self.name == "bot1") {
                 if(movingObj.gameObject.layer == 9 && GameManager.instance.gameState == GlobalEnums.GameState.PLAYING) {
                     self.gameObject.SetActive(false);
-                    GameObject.Find("Bounds Cage").SetActive(false);
+                    boundsRef.SetActive(false);
                     awaitMemage();
                 }
             }
@@ -39,7 +40,10 @@ namespace Archiv {
         private void sceneLoad(On.GameManager.orig_OnNextLevelReady orig, GameManager self) {
             orig(self);
             try {
-                GameObject.Find("Bounds Cage").SetActive(true);
+                if(boundsRef == null) {
+                    boundsRef = GameObject.Find("Bounds Cage");
+                }
+                boundsRef.SetActive(true);
             }
             catch(Exception) { }
         }
