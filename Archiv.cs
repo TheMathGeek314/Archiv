@@ -16,6 +16,11 @@ namespace Archiv {
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects) {
             objectTemplate = preloadedObjects["Town"]["grimm_tents/main_tent/Grimm_town_signs_0001_1"];
             On.TransitionPoint.OnTriggerEnter2D += transitionOverride;
+            On.GameManager.OnNextLevelReady += sceneLoad;
+        }
+
+        public override List<(string, string)> GetPreloadNames() {
+            return new List<(string, string)> { ("Town", "grimm_tents/main_tent/Grimm_town_signs_0001_1") };//don't mind me, just reusing golf code here
         }
 
         private void transitionOverride(On.TransitionPoint.orig_OnTriggerEnter2D orig, TransitionPoint self, Collider2D movingObj) {
@@ -31,8 +36,12 @@ namespace Archiv {
             }
         }
 
-        public override List<(string, string)> GetPreloadNames() {
-            return new List<(string, string)> { ("Town", "grimm_tents/main_tent/Grimm_town_signs_0001_1") };//don't mind me, just reusing golf code here
+        private void sceneLoad(On.GameManager.orig_OnNextLevelReady orig, GameManager self) {
+            orig(self);
+            try {
+                GameObject.Find("Bounds Cage").SetActive(true);
+            }
+            catch(Exception) { }
         }
 
         private async void awaitMemage() {
